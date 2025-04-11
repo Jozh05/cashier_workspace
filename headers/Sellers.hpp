@@ -16,4 +16,5 @@ private:
 
 public:
     void load(const std::string& filePath);
+    const Seller* find(const std::string& login) const;
 };

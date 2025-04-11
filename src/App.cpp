@@ -9,3 +9,7 @@ void App::loadSellersList(const std::string& filePath) {
     sellersList = Sellers();
     catalog.load(filePath);
 }
+
+bool App::signIn(const std::string& login) {
+    return sellersList.find(login) != nullptr;
+}

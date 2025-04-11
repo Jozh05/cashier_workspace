@@ -27,3 +27,11 @@ void Sellers::load(const std::string& filePath) {
         workers.emplace(login, Seller(login, name));
     }
 }
+
+const Seller* Sellers::find(const std::string& login) const {
+    auto iter = workers.find(login);
+    if (iter != workers.end())
+        return &iter->second;
+    else 
+        return nullptr;
+}

@@ -12,10 +12,10 @@ private:
 private:
     void loadCatalog(const std::string& filePath);
     void loadSellersList(const std::string& filePath);
-    void login();
+    bool signIn(const std::string& login);
     void endShift();
 
 public:
     void start();
-    int stop();
+    void stop(int returnCode);
 };
