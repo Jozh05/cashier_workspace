@@ -16,12 +16,10 @@ friend class WorkShift;
 private:    
     PaymentType paymentType = PaymentType::NonCash;
 private:
-    Check(const Catalog& catalog) : 
-        catalog(catalog){};
-
-public:
     std::unordered_map<uint64_t, unsigned int> items;
     const Catalog& catalog;
+    Check(const Catalog& catalog) : 
+        catalog(catalog){};
 
 public:    
     Check() = delete;

@@ -14,7 +14,6 @@ void WorkShift::startOrder() {
     check.items.clear();
 }
 
-
 double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
     
     if (pay < sum)
@@ -35,6 +34,7 @@ double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
             return 0;
             break;
         default:
+            return 0;
             break;
         }
     }

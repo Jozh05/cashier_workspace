@@ -7,17 +7,15 @@ class WorkShift {
 
     friend class App;
 private:
-    const std::string sellerLogin; // Login кассира
+    
     double cash = 10000; // Количество наличных денег
     double cashPayment = 0; // Оплачено наличными
     double nonCashPayment = 0; // Оплачено безналом
     Check check;
-
-    WorkShift (const std::string& sellerLogin, const Catalog& catalog, const Seller& seller) :
-        sellerLogin(sellerLogin), check(Check(catalog)), seller(seller) {}
-
-public:
     const Seller& seller;
+
+    WorkShift (const Catalog& catalog, const Seller& seller) :
+         check(Check(catalog)), seller(seller) {}
 
 public:
     ~WorkShift() = default;
