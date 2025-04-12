@@ -27,10 +27,6 @@ void Check::remove(const std::string& name, unsigned int count) {
 }
 
 
-PaymentType Check::getPaymentType() const {
-    return paymentType;
-}
-
 /*
 double Check::close(PaymentType paymentType, unsigned int pay) {
     double result = 0;

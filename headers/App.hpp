@@ -3,6 +3,7 @@
 #include "Sellers.hpp"
 #include "Config.hpp"
 #include "Errors.hpp"
+#include <sstream>
 
 class App {
 

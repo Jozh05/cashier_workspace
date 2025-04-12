@@ -68,18 +68,18 @@ std::pair<std::string&, bool> App::validateProduct(std::string& product) {
         if (catalog.find(id) != nullptr)
             return {product, true};
         else {
-            product = "";
+            product.clear();
             return {product, false};
         }
     } catch (const std::invalid_argument&) {
         if (catalog.find(product) != nullptr)
             return {product, false};
         else {
-            product = "";
+            product.clear();
             return {product, false};
         }
     } catch (const std::out_of_range&) {
-        product = "";
+        product.clear();
         return {product, false};
     }
 }
@@ -98,6 +98,9 @@ void App::createOrder() {
             completeOrder();
             break;
         }
+        else if (command != "remove" || command != "add")
+            std::cout << "Incorrect command" << std::endl;
+        
         std::cin >> product;
         auto validate = validateProduct(product);
         if (validate.first.empty())
@@ -114,9 +117,6 @@ void App::createOrder() {
 
         else if (command == "remove")
             workShift->check.remove(validate.first);
-        
-        else
-            std::cout << "Incorrect command" << std::endl;
     } 
 }
 
