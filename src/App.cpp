@@ -1,6 +1,5 @@
 #include "../headers/App.hpp"
 
-
 void App::loadCatalog(const std::string& filePath) {
     catalog = Catalog();
     try {
@@ -36,19 +35,8 @@ void App::endShift() {
     workShift = nullptr;
 }
 
-void App::printHello() const {
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << R"(
-        ===========================================
-               Welcome to the Cashier System
-        ===========================================
-        
-        To begin your shift, please enter your login.
-        Authorization is required to start working.
-        )" << std::endl;
-}
 
-void App::interfaceAuth() {
+void App::authentication() {
     std::string login;
     bool isAuthenticated = false;
     do {
@@ -62,82 +50,22 @@ void App::interfaceAuth() {
     } while (!isAuthenticated); 
 }
 
-std::pair<std::string&, bool> App::validateProduct(std::string& product) const {
-    try {
-        uint64_t id = stoull(product);
-        if (catalog.find(id) != nullptr)
-            return {product, true};
-        else {
-            product.clear();
-            return {product, false};
-        }
-    } catch (const std::invalid_argument&) {
-        if (catalog.find(product) != nullptr)
-            return {product, false};
-        else {
-            product.clear();
-            return {product, false};
-        }
-    } catch (const std::out_of_range&) {
-        product.clear();
-        return {product, false};
-    }
-}
-
-unsigned int App::validateQuantity(const std::string& token) const {
-    
-    if (token.front() == '-')
-        return 0;
-    try {
-        unsigned int quan = std::stoul(token);
-        return quan;
-    } catch (const std::invalid_argument&) {
-        return 0;
-    } catch (const std::out_of_range&) {
-        return 0;
-    }
-}
-
-std::vector<std::string> App::parseCommand(const std::string& commandLine) const {
-
-        std::istringstream iss(commandLine);
-        std::vector<std::string> tokens;
-        tokens.reserve(3);
-        std::string token;
-
-        for (int i = 0; i != 3 && iss >> token; ++i) {
-            tokens.push_back(token);
-        }
-        return tokens;
-}
-
-void App::printOrderInstructions() const {
-    std::cout << R"(
-        To add one item to an order, type "add <Product name or id>"
-        To add <number> items to an order, type "add <Product name or id> <number>"
-
-        To remove one item from an order, type "remove <Product name or id>"
-        To remove <number> items from an order, type "remove <Product name or id> <number>"
-        
-        To complete the order formation type "end"
-    )";
-}
-
 void App::createOrder() {
     std::cin.clear();
     std::cin.ignore();
 
-    printOrderInstructions();
+    Interface::printOrderInstructions();
+    workShift->startOrder();
 
     std::string commandLine;
-    
-    while (true) {
 
+    while (true) {
+        std::cin.clear();
         std::getline(std::cin, commandLine);
         if (commandLine.empty()) continue;
 
         std::cout << commandLine << std::endl;
-        std::vector<std::string> tokens = std::move(parseCommand(commandLine));
+        std::vector<std::string> tokens = std::move(Interface::parseCommand(commandLine));
         if (tokens[0] == "end") {
             completeOrder();
             break;
@@ -151,7 +79,7 @@ void App::createOrder() {
         
         unsigned int quantity = 1;
         if (tokens.size() == 3)
-            quantity = validateQuantity(tokens[2]);
+            quantity = Interface::validateQuantity(tokens[2]);
 
         if (quantity == 0) {
             std::cout << "Incorrect quantity. Changed to the default value = 1" << std::endl;
@@ -176,21 +104,41 @@ void App::createOrder() {
     }
 }
 
+std::pair<std::string&, bool> App::validateProduct(std::string& product) const {
+    try {
+        uint64_t id = stoull(product);
+        if (catalog.find(id) != nullptr)
+            return {product, true};
+        else {
+            product.clear();
+            return {product, false};
+        }
+    } catch (const std::invalid_argument&) {
+        if (catalog.find(product) != nullptr)
+            return {product, false};
+        else {
+            product.clear();
+            return {product, false};
+        }
+    } catch (const std::out_of_range&) {
+        product.clear();
+        return {product, false};
+    }
+}
+
 void App::completeOrder() {
+    workShift->printCheck();
     std::cout << "Complete!" << std::endl;
 }
 
-void App::interfaceMainMenu() {
+void App::MainMenu() {
     int command;
     while (true) {
         std::cin.clear();
+        std::cin.ignore();
         std::cout << "Shift is active. User login: " << workShift->seller.login << std::endl;
-        std::cout << R"(
-    Select an action:
-
-    1. Create new order
-    2. Print the report and sign out)";
-        std::cout << std::endl;
+        Interface::printMainMenu();
+        
         std::cin >> command;
 
         switch (command)
@@ -205,7 +153,7 @@ void App::interfaceMainMenu() {
             break;
         }
 
-    } while (command != 2);
+    }
 }
 
 
@@ -214,11 +162,11 @@ void App::start() {
     loadCatalog(catalogPath);
     loadSellersList(sellersListPath);
 
-    printHello();
+    Interface::printHello();
 
-    interfaceAuth();
+    authentication();
 
-    interfaceMainMenu();
+    MainMenu();
 
 }
 

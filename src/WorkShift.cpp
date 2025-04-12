@@ -27,15 +27,22 @@ double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
             cash -= change;
             cashPayment += sum;
             return change;
-            break;
         }
         case PaymentType::NonCash:
             nonCashPayment += sum;
             return 0;
-            break;
         default:
             return 0;
-            break;
         }
+    }
+}
+
+void WorkShift::printCheck() const{
+    std::cout << "Check report:" << std::endl;
+    std::cout << "Cashier's name: " << seller << std::endl;
+    for (auto iter = check.items.begin(); iter != check.items.end(); iter++) {
+        auto item = check.catalog.find(iter->first);
+        auto quantity = iter->second;
+        std::cout << item << " Quantity: " << quantity << " Total price: " << item->price * quantity << std::endl;
     }
 }

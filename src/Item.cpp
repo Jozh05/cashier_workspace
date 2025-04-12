@@ -1,6 +1,6 @@
 #include "../headers/Item.hpp"
 
-void Item::print() const {
-    std::cout << "ID: " << this->id << " Name: " << 
-        this->name << " Price: " <<  this->price << std::endl;
+std::ostream& Item::operator << (std::ostream& stream) const{
+    stream << "Barcode: " << id << " Name: " << name << " Price: " << price;
+    return stream;
 }

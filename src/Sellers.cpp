@@ -4,11 +4,10 @@
 #include <fstream>
 #include "../headers/Errors.hpp"
 
-
-void Seller::print() const {
-    std::cout << "Login: " << login << " Name: " << name << std::endl;
+std::ostream& operator<< (std::ostream& os, const Seller& seller) {
+    os << seller.name;
+    return os;
 }
-
 
 void Sellers::load(const std::string& filePath) {
     

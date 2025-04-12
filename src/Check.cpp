@@ -27,28 +27,3 @@ void Check::remove(const std::string& name, unsigned int count) {
 }
 
 
-/*
-double Check::close(PaymentType paymentType, unsigned int pay) {
-    double result = 0;
-    this->paymentType = paymentType;
-
-    for (auto it = items.begin(); it != items.end(); it++) {
-        result += catalog.find(it->first)->price * it->second;
-    }
-
-    switch (paymentType)
-    {
-    case PaymentType::Cash:
-        if (pay > result)
-            workShift.cash += pay;
-        break;
-    case PaymentType::NonCash:
-        
-    default:
-        break;
-    }
-
-    return result;
-}
-*/
-

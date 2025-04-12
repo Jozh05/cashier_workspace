@@ -24,4 +24,6 @@ public:
     double endOrder();
 
     double payment(double sum, double pay, PaymentType);
+
+    void printCheck() const;
 };

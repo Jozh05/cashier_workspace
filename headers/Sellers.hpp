@@ -7,8 +7,9 @@ struct Seller {
     const std::string name;
     Seller(const std::string& login, const std::string& name) : 
         login(login), name(name){}
-    void print() const;
 };
+
+extern std::ostream& operator << (std::ostream& os, const Seller& seller);
 
 class Sellers {
 
