@@ -63,8 +63,7 @@ void App::createOrder() {
         std::cin.clear();
         std::getline(std::cin, commandLine);
         if (commandLine.empty()) continue;
-
-        std::cout << commandLine << std::endl;
+        
         std::vector<std::string> tokens = std::move(Interface::parseCommand(commandLine));
         if (tokens[0] == "end") {
             completeOrder();

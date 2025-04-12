@@ -9,6 +9,6 @@ struct Item {
     
     Item(uint64_t id, const std::string& name, double price) :
         id(id), name(name), price(price){}
-
-    std::ostream& operator << (std::ostream& stream) const;
 };
+
+extern std::ostream& operator << (std::ostream& stream, const Item& item);

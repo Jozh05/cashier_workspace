@@ -38,11 +38,14 @@ double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
 }
 
 void WorkShift::printCheck() const{
+    unsigned int total = 0;
     std::cout << "Check report:" << std::endl;
     std::cout << "Cashier's name: " << seller << std::endl;
     for (auto iter = check.items.begin(); iter != check.items.end(); iter++) {
-        auto item = check.catalog.find(iter->first);
+        auto item = *check.catalog.find(iter->first);
         auto quantity = iter->second;
-        std::cout << item << " Quantity: " << quantity << " Total price: " << item->price * quantity << std::endl;
+        std::cout << item << " Quantity: " << quantity << " Total price: " << item.price * quantity << std::endl;
+        total += item.price * quantity;
     }
+    std::cout << "TOTAL PRICE: " << total << std::endl;
 }
