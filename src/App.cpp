@@ -1,5 +1,6 @@
 #include "../headers/App.hpp"
 
+
 void App::loadCatalog(const std::string& filePath) {
     catalog = Catalog();
     try {
@@ -35,7 +36,7 @@ void App::endShift() {
     workShift = nullptr;
 }
 
-void App::sayHello() {
+void App::printHello() const {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << R"(
         ===========================================
@@ -51,7 +52,6 @@ void App::interfaceAuth() {
     std::string login;
     bool isAuthenticated = false;
     do {
-        std::cin.clear();
         std::cout << "Enter your login:\t";
         std::cin >> login;
         if (!signIn(login))
@@ -62,7 +62,7 @@ void App::interfaceAuth() {
     } while (!isAuthenticated); 
 }
 
-std::pair<std::string&, bool> App::validateProduct(std::string& product) {
+std::pair<std::string&, bool> App::validateProduct(std::string& product) const {
     try {
         uint64_t id = stoull(product);
         if (catalog.find(id) != nullptr)
@@ -84,40 +84,96 @@ std::pair<std::string&, bool> App::validateProduct(std::string& product) {
     }
 }
 
-void App::createOrder() {
-    std::string command;
-    std::string product;
+unsigned int App::validateQuantity(const std::string& token) const {
+    
+    if (token.front() == '-')
+        return 0;
+    try {
+        unsigned int quan = std::stoul(token);
+        return quan;
+    } catch (const std::invalid_argument&) {
+        return 0;
+    } catch (const std::out_of_range&) {
+        return 0;
+    }
+}
+
+std::vector<std::string> App::parseCommand(const std::string& commandLine) const {
+
+        std::istringstream iss(commandLine);
+        std::vector<std::string> tokens;
+        tokens.reserve(3);
+        std::string token;
+
+        for (int i = 0; i != 3 && iss >> token; ++i) {
+            tokens.push_back(token);
+        }
+        return tokens;
+}
+
+void App::printOrderInstructions() const {
     std::cout << R"(
-        To add an item to an order type "add <Product name or id>"
-        To remove an item from an order type "remove <Product name or id>"
+        To add one item to an order, type "add <Product name or id>"
+        To add <number> items to an order, type "add <Product name or id> <number>"
+
+        To remove one item from an order, type "remove <Product name or id>"
+        To remove <number> items from an order, type "remove <Product name or id> <number>"
+        
         To complete the order formation type "end"
     )";
+}
+
+void App::createOrder() {
+    std::cin.clear();
+    std::cin.ignore();
+
+    printOrderInstructions();
+
+    std::string commandLine;
+    
     while (true) {
-        std::cin >> command;
-        if (command == "end") {
+
+        std::getline(std::cin, commandLine);
+        if (commandLine.empty()) continue;
+
+        std::cout << commandLine << std::endl;
+        std::vector<std::string> tokens = std::move(parseCommand(commandLine));
+        if (tokens[0] == "end") {
             completeOrder();
             break;
         }
-        else if (command != "remove" || command != "add")
+        else if (tokens[0] != "remove" && tokens[0] != "add" || tokens.size() < 2) {
             std::cout << "Incorrect command" << std::endl;
+            continue;
+        }
+    
+        auto valid = validateProduct(tokens[1]);
         
-        std::cin >> product;
-        auto validate = validateProduct(product);
-        if (validate.first.empty())
-            std::cout << "Incorrect product." << std::endl;
+        unsigned int quantity = 1;
+        if (tokens.size() == 3)
+            quantity = validateQuantity(tokens[2]);
 
-        else if (validate.second && command == "add") 
-            workShift->check.add(std::stoull(validate.first));
+        if (quantity == 0) {
+            std::cout << "Incorrect quantity. Changed to the default value = 1" << std::endl;
+            quantity = 1;
+        }
 
-        else if (validate.second && command == "remove")
-            workShift->check.add(std::stoull(validate.first));
-
-        else if (command == "add")
-            workShift->check.add(validate.first);
-
-        else if (command == "remove")
-            workShift->check.remove(validate.first);
-    } 
+        if (valid.first.empty()) {
+            std::cout << "Incorrect product" << std::endl;
+        }
+        else if (valid.second && tokens[0] == "add") {
+            workShift->check.add(std::stoull(tokens[1]), quantity);
+        }
+        else if (valid.second && tokens[0] == "remove"){
+            workShift->check.remove(std::stoull(tokens[1]), quantity);
+        }
+        else if (tokens[0] == "add") {
+            workShift->check.add(valid.first, quantity);
+        }
+        else if (tokens[0] == "remove") {
+            workShift->check.remove(valid.first, quantity);
+        }
+    }
 }
 
 void App::completeOrder() {
@@ -129,13 +185,12 @@ void App::interfaceMainMenu() {
     while (true) {
         std::cin.clear();
         std::cout << "Shift is active. User login: " << workShift->seller.login << std::endl;
-        std::cout << R"(   
-        Select an action:
+        std::cout << R"(
+    Select an action:
 
-        1. Create new order
-        2. Print the report and sign out
-
-        )";
+    1. Create new order
+    2. Print the report and sign out)";
+        std::cout << std::endl;
         std::cin >> command;
 
         switch (command)
@@ -159,7 +214,7 @@ void App::start() {
     loadCatalog(catalogPath);
     loadSellersList(sellersListPath);
 
-    sayHello();
+    printHello();
 
     interfaceAuth();
 
