@@ -7,6 +7,7 @@ struct Seller {
     const std::string name;
     Seller(const std::string& login, const std::string& name) : 
         login(login), name(name){}
+    void print() const;
 };
 
 class Sellers {
@@ -16,5 +17,5 @@ private:
 
 public:
     void load(const std::string& filePath);
-    const Seller* find(const std::string& login) const;
+    const Seller* const find(const std::string& login) const;
 };

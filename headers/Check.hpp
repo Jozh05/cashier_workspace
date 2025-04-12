@@ -26,7 +26,7 @@ public:
 public:    
     Check() = delete;
 
-    PaymentType getPaymentType() const;
+    PaymentType getPaymentType() const; // ATTENTION
 
     void add(uint64_t id, unsigned int count = 1);
     void add(const std::string& name, unsigned int count = 1);

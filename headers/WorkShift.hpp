@@ -1,9 +1,7 @@
 #pragma once
 #include <string>
-#include <stdexcept>
 #include "Check.hpp"
-#include "App.hpp"
-
+#include "Sellers.hpp"
 
 class WorkShift {
 
@@ -15,8 +13,11 @@ private:
     double nonCashPayment = 0; // Оплачено безналом
     Check check;
 
-    WorkShift (const std::string& sellerLogin, const Catalog& catalog) :
-        check(Check(catalog)), sellerLogin(sellerLogin){}
+    WorkShift (const std::string& sellerLogin, const Catalog& catalog, const Seller& seller) :
+        sellerLogin(sellerLogin), check(Check(catalog)), seller(seller) {}
+
+public:
+    const Seller& seller;
 
 public:
     ~WorkShift() = default;

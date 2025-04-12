@@ -1,4 +1,5 @@
 #include "../headers/WorkShift.hpp"
+#include "../headers/Errors.hpp"
 
 double WorkShift::endOrder() {
     
@@ -17,20 +18,23 @@ void WorkShift::startOrder() {
 double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
     
     if (pay < sum)
-            throw std::runtime_error("Insufficient funds");
+            throw PaymentError("Insufficient funds");
     else {
         switch (paymentType)
         {
-        case PaymentType::Cash:
+        case PaymentType::Cash: {
             double change = pay - sum;
             cash += pay;
             cash -= change;
             cashPayment += sum;
             return change;
             break;
+        }
         case PaymentType::NonCash:
             nonCashPayment += sum;
             return 0;
+            break;
+        default:
             break;
         }
     }

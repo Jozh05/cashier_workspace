@@ -2,13 +2,13 @@
 #include <json/json.h>
 #include <iostream>
 #include <fstream>
-#include <stdexcept>
+#include "../headers/Errors.hpp"
 
 void Catalog::load(const std::string& filePath) {
     
     std::ifstream file(filePath, std::ifstream::binary);
     if (!file.is_open()) {
-        throw std::runtime_error("Failed to open catalog file");
+        throw CriticalError("Failed to open catalog file");
     }
 
     Json::Value root;
@@ -17,7 +17,7 @@ void Catalog::load(const std::string& filePath) {
 
     
     if (bool ok = Json::parseFromStream(builder, file, &root, &errs); !ok) {
-        throw std::runtime_error("Failed to parse catalog file");
+        throw CriticalError("Failed to parse catalog file");
     }
 
     file.close();

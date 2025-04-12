@@ -2,13 +2,20 @@
 #include <json/json.h>
 #include <iostream>
 #include <fstream>
+#include "../headers/Errors.hpp"
+
+
+void Seller::print() const {
+    std::cout << "Login: " << login << " Name: " << name << std::endl;
+}
+
 
 void Sellers::load(const std::string& filePath) {
     
     std::ifstream file(filePath, std::ifstream::binary);
 
     if (!file.is_open()) {
-        throw std::runtime_error("Failed to open sellers file");
+        throw CriticalError("Failed to open sellers file");
     }
 
     Json::Value root;
@@ -16,7 +23,7 @@ void Sellers::load(const std::string& filePath) {
     JSONCPP_STRING errs;
 
     if (bool ok = Json::parseFromStream(builder, file, &root, &errs); !ok) {
-        throw std::runtime_error("Failed to parse sellers file");
+        throw CriticalError("Failed to parse sellers file");
     }
 
     file.close();
@@ -28,10 +35,10 @@ void Sellers::load(const std::string& filePath) {
     }
 }
 
-const Seller* Sellers::find(const std::string& login) const {
-    auto iter = workers.find(login);
-    if (iter != workers.end())
+const Seller* const Sellers::find(const std::string& login) const {
+    
+    if (auto iter = workers.find(login); iter != workers.end())
         return &iter->second;
-    else 
+    else
         return nullptr;
 }
