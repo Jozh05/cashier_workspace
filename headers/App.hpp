@@ -4,7 +4,16 @@
 #include "Config.hpp"
 #include "Errors.hpp"
 #include "Interface.hpp"
+#include <csignal>
 
+
+enum class AppState {
+    StartMenu,
+    MainMenu,
+    OrderCreation,
+    OrderComplition,
+    Exit
+};
 
 class App {
 
@@ -12,6 +21,8 @@ private:
     WorkShift* workShift = nullptr;
     Catalog catalog;
     Sellers sellersList;
+
+    AppState state = AppState::StartMenu;
     
 private:
     void loadCatalog(const std::string& filePath);
@@ -20,9 +31,10 @@ private:
     void endShift();
     std::pair<std::string&, bool> validateProduct(std::string& product) const;
 
-// Методы для взаимодействия с пользователем
+
 private:
-    void authentication();
+    bool authentication();
+    void StartMenu();
     void MainMenu();
     void createOrder();
     void completeOrder();

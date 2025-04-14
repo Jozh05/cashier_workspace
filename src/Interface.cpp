@@ -20,10 +20,15 @@ void Interface::printOrderInstructions() {
         To remove one item from an order, type "remove <Product name or id>"
         To remove <number> items from an order, type "remove <Product name or id> <number>"
         
-        To complete the order formation type "end"
-    )";
+        To complete the order formation type "end")" << std::endl;
 }
 
+
+void Interface::printStartMenu() {
+    std::cout << R"(Please, select the action:
+        1. Sign in
+        2. Quit the program)" << std::endl;
+}
 
 std::vector<std::string> Interface::parseCommand(const std::string& commandLine) {
     std::istringstream iss(commandLine);
@@ -43,9 +48,7 @@ unsigned int Interface::validateQuantity(const std::string& token) {
     try {
         unsigned int quan = std::stoul(token);
         return quan;
-    } catch (const std::invalid_argument&) {
-        return 0;
-    } catch (const std::out_of_range&) {
+    } catch (...) {
         return 0;
     }
 }
@@ -68,54 +71,6 @@ void Interface::printPaymentInstructions() {
     )" << std::endl;
 }
 
-double Interface::cashPaymentInterface() {
-    while (true) {
-        std::cin.clear();
-        
-        std::string pay;
-        if (pay == "change") {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            return -1;
-        }
-        std::cin >> pay;
-        try {
-            double result = std::stod(pay);
-            if (result >= 0) {
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                return result;
-            }
-            else {
-                std::cout << "Incorrect amount" << std::endl;
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            }
-        } catch (...) {
-            std::cout << "Incorrect amount" << std::endl;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-    }
-}
-
-double Interface::nonCashPaymentInterface() {
-    while (true) {
-        std::cin.clear();
-        std::cout << R"(To change payment type, please type "change")" << std::endl;
-        std::cout << "Enter the amount of money in the bank account: " << std::endl;
-        std::string pay;
-        if (pay == "change") {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            return -1;
-        }
-        std::cin >> pay;
-        try {
-            double result = std::stod(pay);
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            return result;
-        } catch (...) {
-            std::cout << "Incorrect amount" << std::endl;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-    }
-}
 
 double Interface::paymentInterface(PaymentType paymentType) {
     while (true) {
@@ -145,6 +100,36 @@ double Interface::paymentInterface(PaymentType paymentType) {
             return result;
         } catch (...) {
             std::cout << "Incorrect amount" << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+}
+
+int Interface::validateMenu() {
+    int result;
+    while (true) {
+        if (std::cin >> result && (result == 1 || result == 2)) {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return result;
+        }
+        else {
+            std::cin.clear();
+            std::cout << "Incorrect command." << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+}
+
+int Interface::validatePaymentType() {
+    int result;
+    while (true) {
+        if (std::cin >> result && (result == 1 || result == 2 || result == 3)) {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return result;
+        }
+        else {
+            std::cin.clear();
+            std::cout << "Incorrect command." << std::endl;
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }

@@ -23,7 +23,9 @@ public:
     void startOrder();
     double endOrder() const;
 
-    double payment(double sum, double pay, PaymentType);
+    double payment(double sum, double& pay, PaymentType);
 
     void printCheck(double sum, double pay, double change) const;
+
+    void printReport() const;
 };

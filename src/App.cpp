@@ -36,24 +36,28 @@ void App::endShift() {
 }
 
 
-void App::authentication() {
+bool App::authentication() {
     std::string login;
-    bool isAuthenticated = false;
-    do {
+    
+    while (true) {
+        std::cin.clear();
+        std::cout << "Type \"back\" to return to start menu" << std::endl;
         std::cout << "Enter your login:\t";
+
         std::cin >> login;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if (login == "back")
+            return false;
+
         if (!signIn(login))
             std::cout << "Incorrect login. Please try again." << std::endl;
         else
-            isAuthenticated = true;
-
-    } while (!isAuthenticated); 
+            return true;
+    }
 }
 
 void App::createOrder() {
-    std::cin.clear();
-    std::cin.ignore();
-
     Interface::printOrderInstructions();
     workShift->startOrder();
 
@@ -66,8 +70,8 @@ void App::createOrder() {
         
         std::vector<std::string> tokens = std::move(Interface::parseCommand(commandLine));
         if (tokens[0] == "end") {
-            completeOrder();
-            break;
+            state = AppState::OrderComplition;
+            return;
         }
         else if (tokens[0] != "remove" && tokens[0] != "add" || tokens.size() < 2) {
             std::cout << "Incorrect command" << std::endl;
@@ -103,6 +107,7 @@ void App::createOrder() {
     }
 }
 
+
 std::pair<std::string&, bool> App::validateProduct(std::string& product) const {
     try {
         uint64_t id = stoull(product);
@@ -130,15 +135,12 @@ void App::completeOrder() {
     double sum = workShift->endOrder();
     
     while (true) {
-        std::cin.clear();
-
-        std::cout << "The amount of your order: " << sum << std::endl;
+        
+        std::cout << "The amount of order: " << sum << std::endl;
         Interface::printPaymentInstructions();
 
-        int command;
-        std::cin >> command;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        
+        int command = Interface::validatePaymentType();
+
         PaymentType paymentType;
         double pay;
         double change;
@@ -157,9 +159,12 @@ void App::completeOrder() {
         // Cancel
         case 3:
             std::cout << "Order has been cancelled" << std::endl;
+            state = AppState::MainMenu;
             return;
         default:
-            break;
+            std::cin.clear();
+            std::cout << "Unknown command" << std::endl;
+            return;
         }
 
         if (pay == -1)
@@ -168,31 +173,57 @@ void App::completeOrder() {
         try {
             change = workShift->payment(sum, pay, paymentType);
             workShift->printCheck(sum, pay, change);
-            std::cout << "Complete!" << std::endl;
-            break;
+            state = AppState::MainMenu;
+            return;
         } catch (const PaymentError& err) {
             std::cout << err.what() << std::endl;
         }
     }   
 }
 
+void App::StartMenu() {
+    
+    while (true) {
+        Interface::printHello();
+        Interface::printStartMenu();
+        int command = Interface::validateMenu();
+    
+        switch (command)
+        {
+        case 1:
+            if (authentication()) {
+                state = AppState::MainMenu;
+                return;
+            }
+            else
+                continue;
+            break;
+        case 2:
+            state = AppState::Exit;
+            return;
+        default:
+            break;
+        }
+    }
+}
+
 void App::MainMenu() {
-    int command;
     while (true) {
         std::cin.clear();
         std::cout << "Shift is active. User login: " << workShift->seller.login << std::endl;
         Interface::printMainMenu();
         
-        std::cin >> command;
+        int command = Interface::validateMenu();
 
         switch (command)
         {
         case 1:
-            createOrder();
-            break;
+            state = AppState::OrderCreation;
+            return;
         case 2:
-            stop(0);
-            break;
+            workShift->printReport();
+            state = AppState::StartMenu;
+            return;
         default:
             break;
         }
@@ -206,12 +237,27 @@ void App::start() {
     loadCatalog(catalogPath);
     loadSellersList(sellersListPath);
 
-    Interface::printHello();
-
-    authentication();
-
-    MainMenu();
-
+    while (state != AppState::Exit) {
+        switch (state)
+        {
+        case AppState::StartMenu:
+            StartMenu();
+            break;
+        case AppState::OrderCreation:
+            createOrder();
+            break;
+        case AppState::OrderComplition:
+            completeOrder();
+            break;
+        case AppState::MainMenu:
+            MainMenu();
+            break;
+        case AppState::Exit:
+            stop(0);
+        default:
+            break;
+        }
+    }
 }
 
 void App::stop(int returnCode) {

@@ -1,7 +1,7 @@
 #include "../headers/WorkShift.hpp"
 #include "../headers/Errors.hpp"
 
-double WorkShift::endOrder() const{
+double WorkShift::endOrder() const {
     
     double result = 0;
     for (auto it = check.items.begin(); it != check.items.end(); it++) {
@@ -14,15 +14,16 @@ void WorkShift::startOrder() {
     check.items.clear();
 }
 
-double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
+double WorkShift::payment(double sum, double& pay, PaymentType paymentType) {
     
     if (pay < sum)
             throw PaymentError("Insufficient funds");
     else {
         switch (paymentType)
         {
-        case PaymentType::Cash: {
+        case PaymentType::Cash: { // TODO!!!
             double change = pay - sum;
+            pay = (pay > sum + 5000) ? sum + 5000 : pay;
             cash += pay;
             cash -= change;
             cashPayment += sum;
@@ -31,6 +32,7 @@ double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
         }
         case PaymentType::NonCash:
             nonCashPayment += sum;
+            pay = sum;
             check.paymentType = PaymentType::NonCash;
             return 0;
         default:
@@ -57,4 +59,10 @@ void WorkShift::printCheck(double total, double pay, double change) const {
 
     std::cout << "Payment amount: " << pay << std::endl;
     std::cout << "Change: " << change << "\n\n";
+}
+
+void WorkShift::printReport() const {
+    std::cout << "Paid in cash: " << cashPayment << std::endl;
+    std::cout << "Paid by bank transfer: " << nonCashPayment << std::endl;
+    std::cout << "Total revenue per shift: " << cashPayment + nonCashPayment << std::endl;
 }
