@@ -126,15 +126,60 @@ std::pair<std::string&, bool> App::validateProduct(std::string& product) const {
 }
 
 void App::completeOrder() {
-    workShift->printCheck();
-    std::cout << "Complete!" << std::endl;
+
+    double sum = workShift->endOrder();
+    
+    while (true) {
+        std::cin.clear();
+
+        std::cout << "The amount of your order: " << sum << std::endl;
+        Interface::printPaymentInstructions();
+
+        int command;
+        std::cin >> command;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        
+        PaymentType paymentType;
+        double pay;
+        double change;
+        switch (command)
+        {
+        // Cash
+        case 1: 
+            paymentType = PaymentType::Cash;
+            pay = Interface::paymentInterface(paymentType);
+            break;
+        // Non-cash
+        case 2: 
+            paymentType = PaymentType::NonCash;
+            pay = Interface::paymentInterface(paymentType);
+            break;
+        // Cancel
+        case 3:
+            std::cout << "Order has been cancelled" << std::endl;
+            return;
+        default:
+            break;
+        }
+
+        if (pay == -1)
+            continue;
+        
+        try {
+            change = workShift->payment(sum, pay, paymentType);
+            workShift->printCheck(sum, pay, change);
+            std::cout << "Complete!" << std::endl;
+            break;
+        } catch (const PaymentError& err) {
+            std::cout << err.what() << std::endl;
+        }
+    }   
 }
 
 void App::MainMenu() {
     int command;
     while (true) {
         std::cin.clear();
-        std::cin.ignore();
         std::cout << "Shift is active. User login: " << workShift->seller.login << std::endl;
         Interface::printMainMenu();
         

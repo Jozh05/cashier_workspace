@@ -3,7 +3,8 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "Catalog.hpp"
+#include <limits>
+#include "Check.hpp"
 
 class Interface {
 
@@ -14,6 +15,9 @@ public:
     static void printHello();
     static void printOrderInstructions();
     static void printMainMenu();
+    static void printPaymentInstructions();
+
     static std::vector<std::string> parseCommand(const std::string& commandLine);
     static unsigned int validateQuantity(const std::string& token);
+    static double paymentInterface(PaymentType);
 };

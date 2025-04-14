@@ -58,3 +58,94 @@ void Interface::printMainMenu() {
     2. Print the report and sign out)";
         std::cout << std::endl;
 }
+
+void Interface::printPaymentInstructions() {
+    std::cout << "Please, choose a payment type." << std::endl;
+    std::cout << R"(
+    1. Cash
+    2. Non-cash
+    3. Cancel the order
+    )" << std::endl;
+}
+
+double Interface::cashPaymentInterface() {
+    while (true) {
+        std::cin.clear();
+        
+        std::string pay;
+        if (pay == "change") {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return -1;
+        }
+        std::cin >> pay;
+        try {
+            double result = std::stod(pay);
+            if (result >= 0) {
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                return result;
+            }
+            else {
+                std::cout << "Incorrect amount" << std::endl;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
+        } catch (...) {
+            std::cout << "Incorrect amount" << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+}
+
+double Interface::nonCashPaymentInterface() {
+    while (true) {
+        std::cin.clear();
+        std::cout << R"(To change payment type, please type "change")" << std::endl;
+        std::cout << "Enter the amount of money in the bank account: " << std::endl;
+        std::string pay;
+        if (pay == "change") {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return -1;
+        }
+        std::cin >> pay;
+        try {
+            double result = std::stod(pay);
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return result;
+        } catch (...) {
+            std::cout << "Incorrect amount" << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+}
+
+double Interface::paymentInterface(PaymentType paymentType) {
+    while (true) {
+        std::cin.clear();
+        std::cout << R"(To change payment type, please type "change")" << std::endl;
+        if (paymentType == PaymentType::Cash) {
+            std::cout << "Enter the payment amount: " << std::endl;
+        }
+        else {
+            std::cout << "Enter the amount of money in the bank account: " << std::endl;
+        }
+
+        std::string pay; std::cin >> pay;
+        if (pay == "change") {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return -1;
+        }
+
+        try {
+            double result = std::stod(pay);
+            if (paymentType == PaymentType::Cash && result < 0) {
+                std::cout << "Incorrect amount" << std::endl;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                continue;
+            }
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return result;
+        } catch (...) {
+            std::cout << "Incorrect amount" << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+}

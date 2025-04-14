@@ -1,7 +1,7 @@
 #include "../headers/WorkShift.hpp"
 #include "../headers/Errors.hpp"
 
-double WorkShift::endOrder() {
+double WorkShift::endOrder() const{
     
     double result = 0;
     for (auto it = check.items.begin(); it != check.items.end(); it++) {
@@ -26,10 +26,12 @@ double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
             cash += pay;
             cash -= change;
             cashPayment += sum;
+            check.paymentType = PaymentType::Cash;
             return change;
         }
         case PaymentType::NonCash:
             nonCashPayment += sum;
+            check.paymentType = PaymentType::NonCash;
             return 0;
         default:
             return 0;
@@ -37,15 +39,22 @@ double WorkShift::payment(double sum, double pay, PaymentType paymentType) {
     }
 }
 
-void WorkShift::printCheck() const{
-    unsigned int total = 0;
+void WorkShift::printCheck(double total, double pay, double change) const {
     std::cout << "Check report:" << std::endl;
     std::cout << "Cashier's name: " << seller << std::endl;
     for (auto iter = check.items.begin(); iter != check.items.end(); iter++) {
         auto item = *check.catalog.find(iter->first);
         auto quantity = iter->second;
-        std::cout << item << " Quantity: " << quantity << " Total price: " << item.price * quantity << std::endl;
-        total += item.price * quantity;
+        std::cout << item << "\tQuantity: " << quantity << "\tFinal price: " << item.price * quantity << std::endl;
     }
     std::cout << "TOTAL PRICE: " << total << std::endl;
+    
+    std::cout << "Payment type: ";
+    if (check.paymentType == PaymentType::Cash)
+        std::cout << "Cash" << std::endl;
+    else if (check.paymentType == PaymentType::NonCash)
+        std::cout << "Non-cash" << std::endl;
+
+    std::cout << "Payment amount: " << pay << std::endl;
+    std::cout << "Change: " << change << "\n\n";
 }

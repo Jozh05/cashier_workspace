@@ -21,9 +21,9 @@ public:
     ~WorkShift() = default;
 
     void startOrder();
-    double endOrder();
+    double endOrder() const;
 
     double payment(double sum, double pay, PaymentType);
 
-    void printCheck() const;
+    void printCheck(double sum, double pay, double change) const;
 };
