@@ -63,6 +63,7 @@ void WorkShift::printCheck(double total, double pay, double change) const {
 }
 
 void WorkShift::printReport() const {
+    std::cout << "The shift is over. User login: " << seller.login << std::endl;
     std::cout << "Paid in cash: " << cashPayment << std::endl;
     std::cout << "Paid by bank transfer: " << nonCashPayment << std::endl;
     std::cout << "Total revenue per shift: " << cashPayment + nonCashPayment << std::endl;
