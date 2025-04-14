@@ -5,7 +5,7 @@ App* App_ptr = nullptr;
 void signalHandler(int signal) {
     if (signal == SIGINT) {
         if (App_ptr != nullptr) {
-            std::cout << "Emergency termination of the program..." << std::endl;
+            std::cout << "\nEmergency termination of the program..." << std::endl;
             App_ptr->stop(-1);
         }
     }
@@ -16,5 +16,4 @@ int main() {
     App app;
     App_ptr = &app;
     app.start();
-    app.stop(0);
 }

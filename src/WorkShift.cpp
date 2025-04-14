@@ -21,11 +21,12 @@ double WorkShift::payment(double sum, double& pay, PaymentType paymentType) {
     else {
         switch (paymentType)
         {
-        case PaymentType::Cash: { // TODO!!!
-            double change = pay - sum;
+        case PaymentType::Cash: { 
             pay = (pay > sum + 5000) ? sum + 5000 : pay;
-            cash += pay;
-            cash -= change;
+            double change = pay - sum;
+            if (change > cash)
+                throw PaymentError("There is no change for that amount");
+            cash += sum;
             cashPayment += sum;
             check.paymentType = PaymentType::Cash;
             return change;

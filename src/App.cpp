@@ -237,7 +237,7 @@ void App::start() {
     loadCatalog(catalogPath);
     loadSellersList(sellersListPath);
 
-    while (state != AppState::Exit) {
+    while (true) {
         switch (state)
         {
         case AppState::StartMenu:
