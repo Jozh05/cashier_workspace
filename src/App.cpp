@@ -139,6 +139,12 @@ void App::completeOrder() {
 
     double sum = workShift->endOrder();
     
+    if (sum == 0) {
+        std::cout << "The order is empty." << std::endl;
+        state = AppState::MainMenu;
+        return;
+    }
+
     while (true) {
         
         std::cout << "The amount of order: " << sum << std::endl;
