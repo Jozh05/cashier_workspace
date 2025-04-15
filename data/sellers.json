@@ -1,27 +1,33 @@
 [
     {
       "login": "seller_john1",
-      "name": "Иванов Алексей"
+      "name": "Иванов Алексей",
+      "password": "1111"
     },
     {
       "login": "market_guru88",
-      "name": "Петрова Марина"
+      "name": "Петрова Марина",
+      "password": "2222"
     },
     {
       "login": "best_seller33",
-      "name": "Сидоров Николай"
+      "name": "Сидоров Николай",
+      "password": "3333"
     },
     {
       "login": "super_shop22",
-      "name": "Кузнецова Елена"
+      "name": "Кузнецова Елена",
+      "password": "4444"
     },
     {
       "login": "fastdeal2025",
-      "name": "Морозов Дмитрий"
+      "name": "Морозов Дмитрий",
+      "password": "5555"
     },
     {
       "login": "eco_goods_ru",
-      "name": "Васильева Ольга"
+      "name": "Васильева Ольга",
+      "password": "6666"
     }
   ]
   

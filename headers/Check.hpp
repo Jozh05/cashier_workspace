@@ -2,7 +2,6 @@
 #include "Catalog.hpp"
 
 #include <vector>
-#include <unordered_map>
 
 enum class PaymentType {
     Cash, 

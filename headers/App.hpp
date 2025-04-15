@@ -27,7 +27,7 @@ private:
 private:
     void loadCatalog(const std::string& filePath);
     void loadSellersList(const std::string& filePath);
-    bool signIn(const std::string& login);
+    bool signIn(const std::string& login, const std::string& password);
     void endShift();
     std::pair<std::string&, bool> validateProduct(std::string& product) const;
 

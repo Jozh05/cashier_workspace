@@ -30,7 +30,8 @@ void Sellers::load(const std::string& filePath) {
     for (const auto& item : root) {
         std::string login = item["login"].asString();
         std::string name = item["name"].asString();
-        workers.emplace(login, Seller(login, name));
+        std::string password = item["password"].asString();
+        workers.emplace(login, Seller(login, name, password));
     }
 }
 

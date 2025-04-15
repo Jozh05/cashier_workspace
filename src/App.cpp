@@ -20,8 +20,8 @@ void App::loadSellersList(const std::string& filePath) {
     }
 }
 
-bool App::signIn(const std::string& login) {
-    if (auto seller = sellersList.find(login); seller != nullptr){
+bool App::signIn(const std::string& login, const std::string& password) {
+    if (auto seller = sellersList.find(login); seller != nullptr && seller->password == password){
         workShift = new WorkShift(catalog, *seller);
     }
     else{
@@ -50,8 +50,13 @@ bool App::authentication() {
         if (login == "back")
             return false;
 
-        if (!signIn(login))
-            std::cout << "Incorrect login. Please try again." << std::endl;
+        std::cout << "Enter your password:\t";
+        std::string password;
+        std::cin >> password;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if (!signIn(login, password))
+            std::cout << "Incorrect login or password. Please try again." << std::endl;
         else
             return true;
     }

@@ -5,8 +5,9 @@
 struct Seller {
     const std::string login;
     const std::string name;
-    Seller(const std::string& login, const std::string& name) : 
-        login(login), name(name){}
+    const std::string password;
+    Seller(const std::string& login, const std::string& name, const std::string& password) : 
+        login(login), name(name), password(password){}
 };
 
 extern std::ostream& operator << (std::ostream& os, const Seller& seller);
