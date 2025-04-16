@@ -1,6 +1,8 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
+#include <json/json.h>
+#include <fstream>
 #include "Item.hpp"
 
 class Catalog {

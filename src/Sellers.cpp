@@ -1,7 +1,4 @@
 #include "../headers/Sellers.hpp"
-#include <json/json.h>
-#include <iostream>
-#include <fstream>
 #include "../headers/Errors.hpp"
 
 std::ostream& operator<< (std::ostream& os, const Seller& seller) {

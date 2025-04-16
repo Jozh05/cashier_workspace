@@ -7,7 +7,7 @@
 #include <csignal>
 
 
-enum class AppState {
+enum class AppState { 
     StartMenu,
     MainMenu,
     OrderCreation,

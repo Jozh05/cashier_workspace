@@ -1,7 +1,4 @@
 #include "../headers/Catalog.hpp"
-#include <json/json.h>
-#include <iostream>
-#include <fstream>
 #include "../headers/Errors.hpp"
 
 void Catalog::load(const std::string& filePath) {

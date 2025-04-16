@@ -1,8 +1,7 @@
+#pragma once
+
 #include <sstream>
-#include <vector>
-#include <iostream>
 #include <iomanip>
-#include <string>
 #include <limits>
 #include "Check.hpp"
 
