@@ -245,8 +245,8 @@ void App::MainMenu() {
 
 void App::start() {
 
-    loadCatalog(catalogPath);
-    loadSellersList(sellersListPath);
+    loadCatalog(catalogPath.string());
+    loadSellersList(sellersListPath.string());
 
     while (true) {
         switch (state)
