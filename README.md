@@ -13,7 +13,7 @@ git clone https://github.com/Microsoft/vcpkg.git
 cd vcpkg
 ./bootstrap-vcpkg.sh
 ./vcpkg integrate install
-./vcpkg install jsoncpp
+./vcpkg install jsoncpp:x64-linux-dynamic
 ```
 
 Также можно вручную собрать библиотеку из исходников:
